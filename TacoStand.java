@@ -8,6 +8,15 @@ public class TacoStand
 	private static double totalFunds = 0;
 
 	/**
+	 * Sets the store to zero for use in automated testing.
+	 */
+	public static void initialize()
+	{
+		numAsada = numPollo = numLengua = numUltimate = 0;
+		totalFunds = 0.0D;
+	}
+
+	/**
 	 * Outputs menu options (kinds of tacos) customer can use to order
 	 */
 	public static void printMenu()

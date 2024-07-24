@@ -54,7 +54,7 @@ Funds Available:       $13.75
 # of Pollo Left:        0 tacos
 # of Lengua Left:       5 tacos
 # of Ultimate Left:     5 tacos
-----------------------------------------", "match"
+----------------------------------------", "exact"
 "Order 3 Carne Asada Tacos", "1
 3", "OPENING UP THE STAND...
 ----------------------------------------
@@ -99,7 +99,7 @@ Funds Available:       $12.50
 # of Pollo Left:        5 tacos
 # of Lengua Left:       5 tacos
 # of Ultimate Left:     5 tacos
-----------------------------------------", "match"
+----------------------------------------", "exact"
 "Order 10 Lengua Tacos", "3
 10", "OPENING UP THE STAND...
 ----------------------------------------
@@ -142,4 +142,4 @@ Funds Available:       $5.00
 # of Pollo Left:        5 tacos
 # of Lengua Left:       5 tacos
 # of Ultimate Left:     5 tacos
-----------------------------------------", "match"
+----------------------------------------", "exact"

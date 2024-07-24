@@ -5,6 +5,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 
 import java.io.*;
+import java.lang.reflect.Field;
+import java.util.Scanner;
 import java.util.regex.Pattern;
 
 import static org.junit.Assert.assertEquals;
@@ -13,23 +15,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TestOutput
 {
-    public static final int BUFFER_LENGTH = 4096;
-    private static ByteArrayInputStream in;
-    private static InputStream originalIn;
-    private static byte[] inputBuffer = new byte[BUFFER_LENGTH];
-
-    @BeforeAll
-    private static void init() {
-        in = new ByteArrayInputStream(inputBuffer);
-        originalIn = System.in;
-        System.setIn(in);
-    }
-
-    @AfterAll
-    private static void cleanUp() {
-        System.setIn(originalIn);
-    }
-
     @ParameterizedTest(name="{0}")
     @CsvFileSource(resources = "output_tests.csv")
     public void testOutputMatch(String testCaseName, String input, String expectedOutput, String matchType)
@@ -40,16 +25,16 @@ public class TestOutput
         System.setOut(new PrintStream(outputStream));
 
         // Send input
-        byte[] inputBytes = input.getBytes();
-        TestOutput.in.reset();
-        int destinationPos = BUFFER_LENGTH - inputBytes.length;
-        System.arraycopy(inputBytes, 0, TestOutput.inputBuffer, destinationPos, inputBytes.length);
-        TestOutput.in.skip(destinationPos);
+        InputStream originalIn = System.in;
+        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+        resetUtilityBelt(in);
 
         // Run the class and capture stdout
         Main.main(null);
         String actualOutput = outputStream.toString().trim();
         System.setOut(originalOut);
+        System.setIn(originalIn);
 
         // Perform the corresponding assertion based on the match type
         switch (matchType) {
@@ -67,21 +52,22 @@ public class TestOutput
             default:
                 fail("Invalid match type for " + testCaseName);
         }
-//            } catch (ClassNotFoundException e)
-//            {
-//                throw new RuntimeException(e);
-//            } catch (InvocationTargetException e)
-//            {
-//                throw new RuntimeException(e);
-//            } catch (IllegalAccessException e)
-//            {
-//                throw new RuntimeException(e);
-//            } catch (NoSuchMethodException e)
-//            {
-//                throw new RuntimeException(e);
-//            } finally {
-//                System.setIn(originalIn);
-//            }
+    }
+
+    /**
+     * Sets a new Scanner in UtilityBelt to the new System.in we are providing.
+     * @param in
+     */
+    private void resetUtilityBelt(ByteArrayInputStream in) {
+        try {
+            Class<?> clazz = Class.forName("UtilityBelt");
+            Field field = clazz.getDeclaredField("keyboard");
+            field.setAccessible(true);
+            field.set(clazz, new Scanner(in));
+        } catch (Exception e) {
+            // UtilityBelt may not be used or be part of the project.
+            System.out.println("Info: UtilityBelt not reset.");
+        }
     }
 }
 
