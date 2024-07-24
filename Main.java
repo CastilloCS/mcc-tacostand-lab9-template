@@ -18,6 +18,7 @@ public class Main
 	public static void main(String[] args)
 	{
 		//DECLARATION + INITIALIZATION SECTION
+		TacoStand.initialize();
 
 		//INPUT + CALCULATION + OUTPUT SECTION
 		TacoStand.addTotalFunds(20);
