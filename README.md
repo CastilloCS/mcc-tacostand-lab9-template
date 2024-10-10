@@ -1,4 +1,4 @@
-# Lab 10 - TacoStand + Selection/Branching
+# Lab 09 - TacoStand + Selection/Branching
 
 # Create a Taco Stand Inventory Management Program!
 
